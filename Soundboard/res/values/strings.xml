@@ -2,10 +2,9 @@
 <resources>
 
     <string name="app_name">Soundboard</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_info">Info</string>
-    <string name="action_sort_by_alphabet">Sort by Alphabet</string>
-    <string name="action_sort_by_atze">Sort by Atze</string>
+    <string name="action_sort_by_alphabet">Nach Alphabet sortieren</string>
+    <string name="action_sort_by_atze">Nach Atze sortieren</string>
     
 	<string-array name="descriptions">
 	    <item>hahaha</item>
