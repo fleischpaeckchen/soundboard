@@ -1,22 +1,26 @@
 package de.tuete.soundboard;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 import de.tuete.soundboard.adapter.MainListAdapter;
+import de.tuete.soundboard.helper.AtzenComparator;
 import de.tuete.soundboard.model.Atze;
 import de.tuete.soundboard.model.Sound;
 
@@ -25,19 +29,20 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private ListView lst_main;
 	private Sound[] sounds;
 	private String[] descriptions;
+	private MainListAdapter adapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		
+
 		this.lst_main = (ListView) findViewById(R.id.lst_main);
 		Resources res = getResources();
 		this.descriptions = res.getStringArray(R.array.descriptions);
 		
 		initList();
 		
-		MainListAdapter adapter = new MainListAdapter(this, R.layout.row_mainlist, this.sounds);
+		this.adapter = new MainListAdapter(this, R.layout.row_mainlist, this.sounds);
 		this.lst_main.setAdapter(adapter);
 		this.lst_main.setOnItemClickListener(this);
 		this.lst_main.setOnItemLongClickListener(this);
@@ -46,14 +51,10 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 
 	private void initList() {
-		Atze[] atzen = new Atze[3];
+		
 		Atze jonas = new Atze("Jonas", R.drawable.jonas);
 		Atze nobi = new Atze("Nobi", R.drawable.nobke);
 		Atze schlotte = new Atze("Schlotte", R.drawable.schlotte);
-		
-		atzen[0] = jonas;
-		atzen[1] = nobi;
-		atzen[2] = schlotte;
 		
 		this.sounds = new Sound[this.descriptions.length];
 		
@@ -83,12 +84,24 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		s4.setRaw(R.raw.schlotte_anrufbeantworter);
 		s4.setAtze(schlotte);
 		
+		Sound s5 = new Sound();
+		s5.setDesc(this.descriptions[5]);
+		s5.setRaw(R.raw.jonas_greifenschrei);
+		s5.setAtze(jonas);
+		
+		Sound s6 = new Sound();
+		s6.setDesc(this.descriptions[6]);
+		s6.setRaw(R.raw.jonas_haessliche_wichser);
+		s6.setAtze(jonas);
+		
 		//adding
 		this.sounds[0] = s0;
 		this.sounds[1] = s1;
 		this.sounds[2] = s2;
 		this.sounds[3] = s3;
 		this.sounds[4] = s4;
+		this.sounds[5] = s5;
+		this.sounds[6] = s6;
 	}
 
 	@Override
@@ -100,8 +113,20 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		if (id == R.id.action_info) {
+			
+			showInfoDialog();
+			
+		}else if(id == R.id.action_sort_by_alphabet){
+			
+			Arrays.sort(this.sounds);
+			this.adapter.notifyDataSetChanged();
+			
+		}else if(id == R.id.action_sort_by_atze){
+			
+			Arrays.sort(this.sounds, new AtzenComparator());
+			this.adapter.notifyDataSetChanged();
+			
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -109,6 +134,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		MediaPlayer player = MediaPlayer.create(this, this.sounds[position].getRaw());
+		//player.setVolume(1f, 1f); seems to have no effect
 		player.start();
 	}
 
@@ -120,6 +146,23 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
 		startActivity(Intent.createChooser(share, "Share Sound File"));
 		return true;
+	}
+	
+	private void showInfoDialog(){
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Soundboard vom Stein");
+		builder.setMessage("Jemacht von Jojo,\n"
+				+ "Ick sach danke zu:,\n"
+				+ "Jonas, Nobi, Mark und Schlitte!\n"
+				+ "Prost!");
+		builder.setNeutralButton("Haick jerafft jonge!", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		builder.create().show();
 	}
 	
 }

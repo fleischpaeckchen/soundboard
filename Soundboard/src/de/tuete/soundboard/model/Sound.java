@@ -1,6 +1,6 @@
 package de.tuete.soundboard.model;
 
-public class Sound {
+public class Sound implements Comparable<Sound>{
 
 	private String desc;
 	private int raw;
@@ -23,5 +23,9 @@ public class Sound {
 	}
 	public void setAtze(Atze atze) {
 		this.atze = atze;
+	}
+	@Override
+	public int compareTo(Sound another) {
+		return this.desc.compareTo(another.desc);
 	}
 }
