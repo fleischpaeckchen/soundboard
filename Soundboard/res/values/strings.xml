@@ -3,17 +3,25 @@
 
     <string name="app_name">Soundboard</string>
     <string name="action_info">Info</string>
+    <string name="save">Speichern</string>
     <string name="action_sort_by_alphabet">Nach Alphabet sortieren</string>
     <string name="action_sort_by_atze">Nach Atze sortieren</string>
-    
-	<string-array name="descriptions">
-	    <item>hahaha</item>
-	    <item>Fick dich junge</item>
-	    <item>Kauderwelsch</item>
-	    <item>Nein Nein Nein</item>
-	    <item>Anrufbeantworter</item>
-	    <item>Greifenschrei</item>
-	    <item>Kommt jetzt noch jemand?</item>
-	</string-array>
-	
+    <string name="placeholder">Placeholder</string>
+    <string name="hint_soundname">Name des Sounds</string>
+    <string name="hint_atzenspinnner">Wer hat das gesagt?!</string>
+
+    <string-array name="descriptions">
+        <item>hahaha</item>
+        <item>Fick dich junge</item>
+        <item>Kauderwelsch</item>
+        <item>Nein Nein Nein</item>
+        <item>Anrufbeantworter</item>
+        <item>Greifenschrei</item>
+        <item>Kommt jetzt noch jemand?</item>
+    </string-array>
+
+    <string name="title_activity_new_sound">New Sound</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+
 </resources>
