@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 
 import android.app.Activity;
 import android.content.Context;
@@ -47,9 +48,29 @@ public class NewSoundActivity extends Activity {
 		
 		if(Intent.ACTION_SEND.equals(action) && type != null){
 			if("audio/*".equals(type)){
-				//handleAudio(intent);
+				handleAudio(intent);
 			}
 		}
+	}
+	
+	private File copyFileToInternal(File aacFile) throws IOException{
+		File internalFile = new File(getFilesDir(), "test.aac");
+		
+		FileChannel inChannel = null;
+		FileChannel outChannel = null;
+		try {
+			inChannel = new FileInputStream(aacFile).getChannel();
+			outChannel = new FileOutputStream(internalFile).getChannel();
+			
+			inChannel.transferTo(0, inChannel.size(), outChannel);
+		} finally {
+			if(inChannel != null)
+				inChannel.close();
+			if(outChannel != null)
+				outChannel.close();
+		}
+		
+		return internalFile;
 	}
 	
 	public void saveSound(View view){
@@ -59,25 +80,11 @@ public class NewSoundActivity extends Activity {
 	private void handleAudio(Intent intent){
 		Uri uri = (Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM);
 		File src = new File(uri.getPath());
-		File dst = new File(getFilesDir().getPath() + "test.aac");
-		
-		InputStream is;
+
+		File dst = null;
 		try {
-			is = new FileInputStream(src);
-			OutputStream os = new FileOutputStream(dst);
-			
-	        byte[] buff=new byte[1024];
-	        int len;
-	        while((len = is.read(buff)) > 0){
-	            os.write(buff,0,len);
-	        }
-	        is.close();
-	        os.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			dst = copyFileToInternal(src);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
