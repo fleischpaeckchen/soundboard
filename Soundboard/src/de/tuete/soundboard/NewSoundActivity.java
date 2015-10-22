@@ -22,24 +22,32 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
 import de.tuete.soundboard.adapter.AtzenSpinnerAdapter;
+import de.tuete.soundboard.db.SoundDbHelper;
 import de.tuete.soundboard.model.Atze;
+import de.tuete.soundboard.model.Sound;
 
 public class NewSoundActivity extends Activity {
 	
 	private Atze[] atzen;
 	private EditText txt_soundname;
 	private Spinner sp_atzen;
-
+	private File sound_file;
+	
+	private SoundDbHelper database;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_sound);
 		
+		this.database = new SoundDbHelper(this);
+		this.atzen = this.database.getAllAtzen();
+		
 		Intent intent = getIntent();
 		String action = intent.getAction();
 		String type = intent.getType();
 		
-		createAtzenArray();
+		//createAtzenArray();
 		this.txt_soundname = (EditText) findViewById(R.id.txt_sound_name);
 		this.sp_atzen = (Spinner) findViewById(R.id.sp_atzen);
 		
@@ -74,7 +82,15 @@ public class NewSoundActivity extends Activity {
 	}
 	
 	public void saveSound(View view){
-		
+		if(!this.txt_soundname.getText().toString().isEmpty() &&
+				this.sp_atzen.getSelectedItem() != null &&
+				this.sound_file != null){
+			
+			Sound sound = new Sound();
+			sound.setDesc(this.txt_soundname.getText().toString());
+			sound.setPath(this.sound_file.getAbsolutePath());
+			sound.setAtze(this.atzen[this.sp_atzen.getSelectedItemPosition()]);
+		}
 	}
 	
 	private void handleAudio(Intent intent){
@@ -83,7 +99,7 @@ public class NewSoundActivity extends Activity {
 
 		File dst = null;
 		try {
-			dst = copyFileToInternal(src);
+			this.sound_file = copyFileToInternal(src);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

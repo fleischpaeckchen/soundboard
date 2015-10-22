@@ -2,7 +2,7 @@ package de.tuete.soundboard.model;
 
 public class Sound implements Comparable<Sound>{
 
-	private String desc;
+	private String desc, path;
 	private int raw;
 	private Atze atze;
 	
@@ -27,5 +27,11 @@ public class Sound implements Comparable<Sound>{
 	@Override
 	public int compareTo(Sound another) {
 		return this.desc.compareTo(another.desc);
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
 	}
 }
