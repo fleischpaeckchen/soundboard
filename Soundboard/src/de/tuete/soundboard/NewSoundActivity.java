@@ -25,6 +25,7 @@ import de.tuete.soundboard.adapter.AtzenSpinnerAdapter;
 import de.tuete.soundboard.db.SoundDbHelper;
 import de.tuete.soundboard.model.Atze;
 import de.tuete.soundboard.model.Sound;
+import de.tuete.soundboard.model.SoundDatabase;
 
 public class NewSoundActivity extends Activity {
 	
@@ -34,6 +35,7 @@ public class NewSoundActivity extends Activity {
 	private File sound_file;
 	
 	private SoundDbHelper database;
+	private SoundDatabase sdb;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,8 @@ public class NewSoundActivity extends Activity {
 		setContentView(R.layout.activity_new_sound);
 		
 		this.database = new SoundDbHelper(this);
-		this.atzen = this.database.getAllAtzen();
+		this.sdb = SoundDatabase.getInstance(this);
+		this.atzen = this.sdb.getAtzen();
 		
 		Intent intent = getIntent();
 		String action = intent.getAction();
@@ -89,7 +92,9 @@ public class NewSoundActivity extends Activity {
 			Sound sound = new Sound();
 			sound.setDesc(this.txt_soundname.getText().toString());
 			sound.setPath(this.sound_file.getAbsolutePath());
-			sound.setAtze(this.atzen[this.sp_atzen.getSelectedItemPosition()]);
+			sound.setAtze(this.atzen[this.sp_atzen.getSelectedItemPosition()].get_id());
+			
+			database.saveSound(sound.getAtze(), sound.getDesc(), sound.getPath());
 		}
 	}
 	
@@ -97,27 +102,26 @@ public class NewSoundActivity extends Activity {
 		Uri uri = (Uri)intent.getParcelableExtra(Intent.EXTRA_STREAM);
 		File src = new File(uri.getPath());
 
-		File dst = null;
 		try {
 			this.sound_file = copyFileToInternal(src);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
         
-		MediaPlayer player = MediaPlayer.create(this, Uri.fromFile(dst));
-		player.start();
+//		MediaPlayer player = MediaPlayer.create(this, Uri.fromFile(dst));
+//		player.start();
 	}
 	
-	private void createAtzenArray(){
-		Atze jonas = new Atze("Jonas", R.drawable.jonas);
-		Atze nobi = new Atze("Nobi", R.drawable.nobke);
-		Atze schlotte = new Atze("Schlotte", R.drawable.schlotte);
-		
-		this.atzen = new Atze[3];
-		atzen[0] = jonas;
-		atzen[1] = nobi;
-		atzen[2] = schlotte;
-	}
+//	private void createAtzenArray(){
+//		Atze jonas = new Atze("Jonas", R.drawable.jonas);
+//		Atze nobi = new Atze("Nobi", R.drawable.nobke);
+//		Atze schlotte = new Atze("Schlotte", R.drawable.schlotte);
+//		
+//		this.atzen = new Atze[3];
+//		atzen[0] = jonas;
+//		atzen[1] = nobi;
+//		atzen[2] = schlotte;
+//	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

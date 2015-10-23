@@ -4,7 +4,7 @@ public class Sound implements Comparable<Sound>{
 
 	private String desc, path;
 	private int raw;
-	private Atze atze;
+	private long atze;
 	
 	public String getDesc() {
 		return desc;
@@ -18,10 +18,10 @@ public class Sound implements Comparable<Sound>{
 	public void setRaw(int raw) {
 		this.raw = raw;
 	}
-	public Atze getAtze() {
+	public long getAtze() {
 		return atze;
 	}
-	public void setAtze(Atze atze) {
+	public void setAtze(long atze) {
 		this.atze = atze;
 	}
 	@Override

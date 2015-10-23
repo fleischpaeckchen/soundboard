@@ -2,10 +2,12 @@ package de.tuete.soundboard.model;
 
 public class Atze {
 
+	private long _id;
 	private String name;
 	private int img_resource;
 	
-	public Atze(String name, int img){
+	public Atze(long id, String name, int img){
+		this._id = id;
 		this.name = name;
 		this.img_resource = img;
 	}
@@ -21,6 +23,14 @@ public class Atze {
 	}
 	public void setImg_resource(int img_resource) {
 		this.img_resource = img_resource;
+	}
+
+	public long get_id() {
+		return _id;
+	}
+
+	public void set_id(long _id) {
+		this._id = _id;
 	}
 	
 	
