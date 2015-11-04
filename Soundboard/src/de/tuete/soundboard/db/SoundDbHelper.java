@@ -83,5 +83,12 @@ public class SoundDbHelper extends SQLiteOpenHelper{
 		
 		return sounds;
 	}
+	
+	public void deleteSound(Sound sound){
+		SQLiteDatabase db = getWritableDatabase();
+		String sql = "DELETE FROM " + SOUND_TABLE_NAME + " WHERE " +
+						SOUND_PATH + " = '" + sound.getPath() + "';";
+		db.execSQL(sql);
+	}
 
 }

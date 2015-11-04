@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -21,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 import de.tuete.soundboard.adapter.AtzenSpinnerAdapter;
 import de.tuete.soundboard.db.SoundDbHelper;
 import de.tuete.soundboard.model.Atze;
@@ -65,7 +67,8 @@ public class NewSoundActivity extends Activity {
 	}
 	
 	private File copyFileToInternal(File aacFile) throws IOException{
-		File internalFile = new File(getFilesDir(), "test.aac");
+		Random random = new Random();
+		File internalFile = new File(getFilesDir(), "soundboard_" + random.nextInt(999999) + ".aac");
 		
 		FileChannel inChannel = null;
 		FileChannel outChannel = null;
@@ -95,6 +98,11 @@ public class NewSoundActivity extends Activity {
 			sound.setAtze(this.atzen[this.sp_atzen.getSelectedItemPosition()].get_id());
 			
 			database.saveSound(sound.getAtze(), sound.getDesc(), sound.getPath());
+			Toast.makeText(this, "Sound " + sound.getDesc() + " gespeichert.", Toast.LENGTH_SHORT).show();
+			//starting main activity
+			Intent intent = new Intent(this, MainActivity.class);
+			startActivity(intent);
+			this.finish();
 		}
 	}
 	

@@ -38,7 +38,7 @@ public class SoundDatabase {
 			Log.d(TAG, "Sound Description: " + sounds[i].getDesc());
 			for (int j = 0; j < atzen.length; j++) {
 				if(sounds[i].getAtze() == atzen[j].get_id())
-					sounds[j].setAtze(atzen[j].get_id());
+					sounds[i].setAtze(atzen[j].get_id());
 			}
 		}
 	}
@@ -69,5 +69,9 @@ public class SoundDatabase {
 				return atze;
 		}
 		return null;
+	}
+	
+	public void deleteSound(Sound sound){
+		helper.deleteSound(sound);
 	}
 }

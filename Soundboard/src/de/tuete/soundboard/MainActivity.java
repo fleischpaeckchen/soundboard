@@ -1,6 +1,7 @@
 package de.tuete.soundboard;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -13,6 +14,7 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 import de.tuete.soundboard.adapter.MainListAdapter;
 import de.tuete.soundboard.helper.AtzenComparator;
 import de.tuete.soundboard.model.Atze;
@@ -47,68 +50,14 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		this.descriptions = res.getStringArray(R.array.descriptions);
 		
 //		initList();
-		
-		this.adapter = new MainListAdapter(this, R.layout.row_mainlist, this.sounds, database.getAtzen());
+		ArrayList<Sound> lstsounds = new ArrayList<Sound>(Arrays.asList(this.sounds));
+		this.adapter = new MainListAdapter(this, R.layout.row_mainlist, lstsounds, database.getAtzen());
 		this.lst_main.setAdapter(adapter);
 		this.lst_main.setOnItemClickListener(this);
 		this.lst_main.setOnItemLongClickListener(this);
 		
 
 	}
-
-//	private void initList() {
-//		
-//		Atze jonas = new Atze("Jonas", R.drawable.jonas);
-//		Atze nobi = new Atze("Nobi", R.drawable.nobke);
-//		Atze schlotte = new Atze("Schlotte", R.drawable.schlotte);
-//		
-//		this.sounds = new Sound[this.descriptions.length];
-//		
-//		//set up sounds
-//		Sound s0 = new Sound();
-//		s0.setDesc(this.descriptions[0]);
-//		s0.setRaw(R.raw.jonas_lachen);
-//		s0.setAtze(jonas);
-//			
-//		Sound s1 = new Sound();
-//		s1.setDesc(this.descriptions[1]);
-//		s1.setRaw(R.raw.jonas_fickdichjunge);
-//		s1.setAtze(jonas);
-//		
-//		Sound s2 = new Sound();
-//		s2.setDesc(this.descriptions[2]);
-//		s2.setRaw(R.raw.jonas_kauderwelsch);
-//		s2.setAtze(jonas);
-//		
-//		Sound s3 = new Sound();
-//		s3.setDesc(this.descriptions[3]);
-//		s3.setRaw(R.raw.nobi_nein);
-//		s3.setAtze(nobi);
-//		
-//		Sound s4 = new Sound();
-//		s4.setDesc(this.descriptions[4]);
-//		s4.setRaw(R.raw.schlotte_anrufbeantworter);
-//		s4.setAtze(schlotte);
-//		
-//		Sound s5 = new Sound();
-//		s5.setDesc(this.descriptions[5]);
-//		s5.setRaw(R.raw.jonas_greifenschrei);
-//		s5.setAtze(jonas);
-//		
-//		Sound s6 = new Sound();
-//		s6.setDesc(this.descriptions[6]);
-//		s6.setRaw(R.raw.jonas_haessliche_wichser);
-//		s6.setAtze(jonas);
-//		
-//		//adding
-//		this.sounds[0] = s0;
-//		this.sounds[1] = s1;
-//		this.sounds[2] = s2;
-//		this.sounds[3] = s3;
-//		this.sounds[4] = s4;
-//		this.sounds[5] = s5;
-//		this.sounds[6] = s6;
-//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -145,13 +94,56 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 		
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle("Was willst du tun?");
+		builder.setNegativeButton("Löschen", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				deleteSound(position);
+			}
+		});
+		builder.setPositiveButton("Senden", new OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				sendSound(position);
+			}
+		});
+		builder.create().show();
+		return true;
+	}
+	
+	private void sendSound(int position){
 		Intent share = new Intent(Intent.ACTION_SEND);
 		share.setType("audio/*");
-		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
+//		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
+		Log.d("MainActivity", "Sound Path: " + sounds[position].getPath());
+		share.putExtra(Intent.EXTRA_STREAM, Uri.parse(sounds[position].getPath()));
 		startActivity(Intent.createChooser(share, "Share Sound File"));
-		return true;
+	}
+	
+	private void deleteSound(int position){
+		String filePath = sounds[position].getPath();
+		database.deleteSound(sounds[position]);
+		File file = new File(filePath);
+		
+		if(file.delete()){
+			Toast.makeText(this, filePath + " gelöscht.", Toast.LENGTH_SHORT).show();
+			refreshList();
+		}else{
+			Toast.makeText(this, "Irgendeine Scheiße ist passiert!", Toast.LENGTH_SHORT).show();
+		}
+	}
+	
+	private void refreshList(){
+		this.sounds = database.getSounds();
+		ArrayList<Sound> lstSounds = new ArrayList<Sound>(Arrays.asList(this.sounds));
+		this.adapter.clear();
+		this.adapter.addAll(lstSounds);
+		this.adapter.notifyDataSetChanged();
 	}
 	
 	private void showInfoDialog(){
