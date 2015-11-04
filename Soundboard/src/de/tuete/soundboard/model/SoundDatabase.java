@@ -1,11 +1,13 @@
 package de.tuete.soundboard.model;
 
 import android.content.Context;
+import android.util.Log;
 import de.tuete.soundboard.R;
 import de.tuete.soundboard.db.SoundDbHelper;
 
 public class SoundDatabase {
 	
+	private static final String TAG = "SoundDatabase";
 	private static SoundDatabase instance;
 	private static SoundDbHelper helper;
 	
@@ -15,6 +17,8 @@ public class SoundDatabase {
 	private SoundDatabase(Context context) {
 		helper = new SoundDbHelper(context);
 		createAtzenArray();
+		this.sounds = new Sound[helper.getSoundCount()];
+		Log.d(TAG, "SoundDatabase object created.");
 	}
 	
 	public static SoundDatabase getInstance(Context context){
@@ -27,8 +31,11 @@ public class SoundDatabase {
 	}
 	
 	public void updateData(){
+		Log.d(TAG, "Entering Method: updateData");
 		this.sounds = helper.getAllSounds();
+		Log.d(TAG, "Sound Array length: " + this.sounds.length);
 		for (int i = 0; i < sounds.length; i++) {
+			Log.d(TAG, "Sound Description: " + sounds[i].getDesc());
 			for (int j = 0; j < atzen.length; j++) {
 				if(sounds[i].getAtze() == atzen[j].get_id())
 					sounds[j].setAtze(atzen[j].get_id());
@@ -42,8 +49,8 @@ public class SoundDatabase {
 	
 	private void createAtzenArray(){
 		Atze jonas = new Atze(0, "Jonas", R.drawable.jonas);
-		Atze nobi = new Atze(0, "Nobi", R.drawable.nobke);
-		Atze schlotte = new Atze(0, "Schlotte", R.drawable.schlotte);
+		Atze nobi = new Atze(1, "Nobi", R.drawable.nobke);
+		Atze schlotte = new Atze(2, "Schlotte", R.drawable.schlotte);
 		
 		this.atzen = new Atze[3];
 		this.atzen[0] = jonas;

@@ -1,5 +1,6 @@
 package de.tuete.soundboard;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -47,7 +48,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		
 //		initList();
 		
-		this.adapter = new MainListAdapter(this, R.layout.row_mainlist, this.sounds);
+		this.adapter = new MainListAdapter(this, R.layout.row_mainlist, this.sounds, database.getAtzen());
 		this.lst_main.setAdapter(adapter);
 		this.lst_main.setOnItemClickListener(this);
 		this.lst_main.setOnItemLongClickListener(this);
@@ -138,7 +139,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		MediaPlayer player = MediaPlayer.create(this, this.sounds[position].getRaw());
+		MediaPlayer player = MediaPlayer.create(this, Uri.fromFile(new File(this.sounds[position].getPath())));
 		//player.setVolume(1f, 1f); seems to have no effect
 		player.start();
 	}

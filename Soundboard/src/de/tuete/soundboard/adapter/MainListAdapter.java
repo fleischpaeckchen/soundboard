@@ -17,11 +17,11 @@ public class MainListAdapter extends ArrayAdapter<Sound>{
 	private Sound[] sounds;
 	private Atze[] atzen;
 	
-	public MainListAdapter(Context context, int resource, Sound[] sounds) {
+	public MainListAdapter(Context context, int resource, Sound[] sounds, Atze[] atzen) {
 		super(context, resource, sounds);
 		this.context = context;
 		this.sounds = sounds;
-		
+		this.atzen = atzen;
 	}
 
 	@Override
