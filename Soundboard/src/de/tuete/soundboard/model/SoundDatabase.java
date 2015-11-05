@@ -57,8 +57,11 @@ public class SoundDatabase {
 		Atze steffi = new Atze(6, "Stefan", R.drawable.steffi);
 		Atze nico = new Atze(7, "Nico", R.drawable.nico);
 		Atze duane = new Atze(8, "Duane", R.drawable.duane);
+		Atze jojo = new Atze(9, "Jojo", R.drawable.jojo);
+		Atze carsten = new Atze(10, "Carsten", R.drawable.carsten);
+		Atze dennis = new Atze(11, "Dennis", R.drawable.dennis);
 		
-		this.atzen = new Atze[9];
+		this.atzen = new Atze[12];
 		this.atzen[0] = jonas;
 		this.atzen[1] = nobi;
 		this.atzen[2] = schlotte;
@@ -68,6 +71,9 @@ public class SoundDatabase {
 		this.atzen[6] = steffi;
 		this.atzen[7] = nico;
 		this.atzen[8] = duane;
+		this.atzen[9] = jojo;
+		this.atzen[10] = carsten;
+		this.atzen[11] = dennis;
 	}
 
 	public Sound[] getSounds() {

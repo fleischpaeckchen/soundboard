@@ -36,7 +36,6 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private static final String TAG = "MainActivity";
 	private ListView lst_main;
 	private Sound[] sounds;
-	private String[] descriptions;
 	private MainListAdapter adapter;
 	private SoundDatabase database;
 	
@@ -50,7 +49,6 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		this.sounds = this.database.getSounds();
 		
 		Resources res = getResources();
-		this.descriptions = res.getStringArray(R.array.descriptions);
 		
 //		initList();
 		ArrayList<Sound> lstsounds = new ArrayList<Sound>(Arrays.asList(this.sounds));
@@ -100,15 +98,15 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setTitle("Was willst du tun?");
-		builder.setNegativeButton("Löschen", new OnClickListener() {
+		builder.setMessage(R.string.what_do_you_want_to_do);
+		builder.setNegativeButton(R.string.delete, new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				deleteSound(position);
 			}
 		});
-		builder.setPositiveButton("Senden", new OnClickListener() {
+		builder.setPositiveButton(R.string.send, new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -120,12 +118,6 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 	
 	private void sendSound(int position){
-//		Intent share = new Intent(Intent.ACTION_SEND);
-//		share.setType("audio/*");
-////		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
-//		Log.d("MainActivity", "Sound Path: " + sounds[position].getPath());
-//		share.putExtra(Intent.EXTRA_STREAM, Uri.parse(sounds[position].getPath()));
-//		startActivity(Intent.createChooser(share, "Share Sound File"));
 		
 		String path = sounds[position].getPath().replace("/data/data/de.tuete.soundboard/files/", "");
 		final File file = new File(getFilesDir(), path);
@@ -150,10 +142,10 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		File file = new File(filePath);
 		
 		if(file.delete()){
-			Toast.makeText(this, filePath + " gel�scht.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, filePath + " " + R.string.info_deleted, Toast.LENGTH_SHORT).show();
 			refreshList();
 		}else{
-			Toast.makeText(this, "Irgendeine Schei�e ist passiert!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, R.string.info_shit_happened, Toast.LENGTH_SHORT).show();
 		}
 	}
 	
@@ -168,11 +160,8 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	private void showInfoDialog(){
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Soundboard vom Stein");
-		builder.setMessage("Jemacht von Jojo,\n"
-				+ "Ick sach danke zu:,\n"
-				+ "Jonas, Nobi, Mark und Schlitte!\n"
-				+ "Prost!");
-		builder.setNeutralButton("Haick jerafft jonge!", new OnClickListener() {
+		builder.setMessage(R.string.info_message);
+		builder.setNeutralButton("Okay", new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {

@@ -9,19 +9,13 @@
     <string name="placeholder">Placeholder</string>
     <string name="hint_soundname">Name des Sounds</string>
     <string name="hint_atzenspinnner">Wer hat das gesagt?!</string>
-
-    <string-array name="descriptions">
-        <item>hahaha</item>
-        <item>Fick dich junge</item>
-        <item>Kauderwelsch</item>
-        <item>Nein Nein Nein</item>
-        <item>Anrufbeantworter</item>
-        <item>Greifenschrei</item>
-        <item>Kommt jetzt noch jemand?</item>
-    </string-array>
-
-    <string name="title_activity_new_sound">New Sound</string>
-    <string name="hello_world">Hello world!</string>
+	<string name="delete">Löschen</string>
+	<string name="send">Senden</string>
+	<string name="info_deleted">gelöscht</string>
+	<string name="info_shit_happened">Irgendeine Scheiße ist passiert.</string>
+	<string name="what_do_you_want_to_do">Was willst du tun?</string>
+    <string name="title_activity_new_sound">Neuer Sound</string>
     <string name="action_settings">Settings</string>
+    <string name="info_message">Von Jojo für die Atzen!\nIch liebe euch!\nProst!</string>
 
 </resources>

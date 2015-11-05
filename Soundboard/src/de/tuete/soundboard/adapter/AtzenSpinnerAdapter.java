@@ -37,8 +37,8 @@ public class AtzenSpinnerAdapter extends ArrayAdapter<Atze> {
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View row = inflater.inflate(R.layout.spinner_row_atzen, parent, false);
 		
-		ImageView img_atze = (ImageView) row.findViewById(R.id.img_atze);
-		img_atze.setImageResource(atzen[position].getImg_resource());
+//		ImageView img_atze = (ImageView) row.findViewById(R.id.img_atze);
+//		img_atze.setImageResource(atzen[position].getImg_resource());
 		
 		TextView txt_atze_name = (TextView) row.findViewById(R.id.txt_atze_name);
 		txt_atze_name.setText(atzen[position].getName());
