@@ -14,6 +14,8 @@ import android.content.res.Resources;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,7 @@ import de.tuete.soundboard.model.SoundDatabase;
 
 public class MainActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
 
+	private static final String TAG = "MainActivity";
 	private ListView lst_main;
 	private Sound[] sounds;
 	private String[] descriptions;
@@ -98,7 +101,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		builder.setTitle("Was willst du tun?");
-		builder.setNegativeButton("Löschen", new OnClickListener() {
+		builder.setNegativeButton("LÃ¶schen", new OnClickListener() {
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -117,12 +120,28 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 	
 	private void sendSound(int position){
-		Intent share = new Intent(Intent.ACTION_SEND);
-		share.setType("audio/*");
-//		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
-		Log.d("MainActivity", "Sound Path: " + sounds[position].getPath());
-		share.putExtra(Intent.EXTRA_STREAM, Uri.parse(sounds[position].getPath()));
-		startActivity(Intent.createChooser(share, "Share Sound File"));
+//		Intent share = new Intent(Intent.ACTION_SEND);
+//		share.setType("audio/*");
+////		share.putExtra(Intent.EXTRA_STREAM, Uri.parse("android.resource://de.tuete.soundboard/" + sounds[position].getRaw()));	
+//		Log.d("MainActivity", "Sound Path: " + sounds[position].getPath());
+//		share.putExtra(Intent.EXTRA_STREAM, Uri.parse(sounds[position].getPath()));
+//		startActivity(Intent.createChooser(share, "Share Sound File"));
+		
+		String path = sounds[position].getPath().replace("/data/data/de.tuete.soundboard/files/", "");
+		final File file = new File(getFilesDir(), path);
+		Log.d(TAG, "File path: " + file.getPath());
+		
+		final Uri uri = FileProvider.getUriForFile(this, "com.mydomain.fileprovider", file);
+		Log.d(TAG, uri.toString());
+		
+		final Intent intent = ShareCompat.IntentBuilder.from(this)
+		    .setType("audio/*")
+		    .setStream(uri)
+		    .createChooserIntent()
+//		    .addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+		    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+		 
+		startActivity(intent);
 	}
 	
 	private void deleteSound(int position){
@@ -131,10 +150,10 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		File file = new File(filePath);
 		
 		if(file.delete()){
-			Toast.makeText(this, filePath + " gelöscht.", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, filePath + " gelï¿½scht.", Toast.LENGTH_SHORT).show();
 			refreshList();
 		}else{
-			Toast.makeText(this, "Irgendeine Scheiße ist passiert!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Irgendeine Scheiï¿½e ist passiert!", Toast.LENGTH_SHORT).show();
 		}
 	}
 	
