@@ -19,21 +19,14 @@ import de.tuete.soundboard.R;
 import de.tuete.soundboard.helper.ViewHolderMain;
 import de.tuete.soundboard.model.Atze;
 import de.tuete.soundboard.model.Sound;
+import de.tuete.soundboard.tasks.MainListTask;
 
 public class MainListAdapter extends ArrayAdapter<Sound>{
 
 	private static final String TAG = "MainListAdapter";
 	private Context context;
-//	private Sound[] sounds;
 	private ArrayList<Sound> sounds;
 	private Atze[] atzen;
-	
-//	public MainListAdapter(Context context, int resource, Sound[] sounds, Atze[] atzen) {
-//		super(context, resource, sounds);
-//		this.context = context;
-//		this.sounds = sounds;
-//		this.atzen = atzen;
-//	}
 
 
 	public MainListAdapter(Context context, int resource, ArrayList<Sound> sounds, Atze[] atzen) {
@@ -47,7 +40,7 @@ public class MainListAdapter extends ArrayAdapter<Sound>{
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		ViewHolderMain viewHolder = new ViewHolderMain();
-		viewHolder.setPosition(position);
+		
 		Sound sound = sounds.get(position);
 		Atze atze = null;
 		for (Atze a : atzen) {
@@ -70,28 +63,12 @@ public class MainListAdapter extends ArrayAdapter<Sound>{
 		
 		
 		viewHolder.getTextView().setText(sound.getDesc());
-		viewHolder.getImage().setImageResource(atze.getImg_resource());
+		viewHolder.setImg_resource(atze.getImg_resource());
+		
+		viewHolder.setPosition(position);
 		//using async shit to load the image
-//		new AsyncTask<ViewHolderMain, Void, Bitmap>(){
-//			private ViewHolderMain viewHolder;
-//
-//			@Override
-//			protected Bitmap doInBackground(ViewHolderMain... params) {
-//				viewHolder = params[0];
-//				Bitmap result = BitmapFactory.decodeResource(context.getResources(), atzen[position].getImg_resource());
-//				Log.d(TAG, "Atzen name: " + atzen[position].getName());
-//				return result;
-//			}
-//			
-//			@Override
-//			protected void onPostExecute(Bitmap result) {
-//				if(viewHolder.getPosition() == position){
-//					Log.d(TAG, "position when finish: " + position + " " + atzen[position].getName() + " " + viewHolder.getPosition());
-//					viewHolder.getImage().setImageBitmap(result);
-//				}
-//			}
-//			
-//		}.execute(viewHolder);
+		new MainListTask(position, viewHolder, this.context).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, null);
+
 		return convertView;
 	}
 	

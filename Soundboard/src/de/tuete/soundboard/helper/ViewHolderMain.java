@@ -7,6 +7,8 @@ public class ViewHolderMain {
 	private ImageView image;
 	private TextView textView;
 	private int position;
+	private int img_resource;
+	
 	public ImageView getImage() {
 		return image;
 	}
@@ -24,6 +26,12 @@ public class ViewHolderMain {
 	}
 	public void setPosition(int position) {
 		this.position = position;
+	}
+	public int getImg_resource() {
+		return img_resource;
+	}
+	public void setImg_resource(int img_resource) {
+		this.img_resource = img_resource;
 	}
 	
 }
