@@ -34,6 +34,8 @@ import de.tuete.soundboard.model.SoundDatabase;
 public class MainActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
 
 	private static final String TAG = "MainActivity";
+	private final String URL_TO_VERSION_FILE = "schulzengraben.de/soundboard_version.txt";
+	private final String URL_TO_APK = "schulzengraben.de/Soundboard.apk";
 	private ListView lst_main;
 	private Sound[] sounds;
 	private MainListAdapter adapter;
@@ -171,4 +173,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 		builder.create().show();
 	}
 	
+	private void checkForUpdate(){
+		
+	}
 }
