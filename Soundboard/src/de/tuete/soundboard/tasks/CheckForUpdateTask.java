@@ -20,6 +20,7 @@ import android.widget.Toast;
 public class CheckForUpdateTask extends AsyncTask<String, Long, Boolean> {
 
 	private int version;
+	private int server_version;
 	private Context context;
 	
 	public CheckForUpdateTask(int version, Context con) {
@@ -54,6 +55,7 @@ public class CheckForUpdateTask extends AsyncTask<String, Long, Boolean> {
 			output.flush();
 			output.close();
 			input.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -62,7 +64,7 @@ public class CheckForUpdateTask extends AsyncTask<String, Long, Boolean> {
 	
 	@Override
 	protected void onPostExecute(Boolean result) {
-		File file = new File("/sdcard/soundbboard_version.txt");
+		File file = new File("/sdcard/soundboard_version.txt");
 		StringBuilder text = new StringBuilder();
 		String msg = "";
 		try {
@@ -77,8 +79,10 @@ public class CheckForUpdateTask extends AsyncTask<String, Long, Boolean> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		if(msg.isEmpty()) Toast.makeText(context, "Bla bla bla", Toast.LENGTH_SHORT).show();
 		Toast.makeText(context, "Version: " + msg, Toast.LENGTH_SHORT).show();
 	}
+
 
 	public int getVersion() {
 		return version;

@@ -30,11 +30,13 @@ import de.tuete.soundboard.helper.AtzenComparator;
 import de.tuete.soundboard.model.Atze;
 import de.tuete.soundboard.model.Sound;
 import de.tuete.soundboard.model.SoundDatabase;
+import de.tuete.soundboard.tasks.CheckForUpdateTask;
 
 public class MainActivity extends Activity implements OnItemClickListener, OnItemLongClickListener{
 
 	private static final String TAG = "MainActivity";
-	private final String URL_TO_VERSION_FILE = "schulzengraben.de/soundboard_version.txt";
+	private static final int APP_VERSION = 1;
+	private final String URL_TO_VERSION_FILE = "http://www.schulzengraben.de/soundboard_version.txt";
 	private final String URL_TO_APK = "schulzengraben.de/Soundboard.apk";
 	private ListView lst_main;
 	private Sound[] sounds;
@@ -85,7 +87,12 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 			Arrays.sort(this.sounds, new AtzenComparator(this.database));
 			this.adapter.notifyDataSetChanged();
 			
+		}else if(id == R.id.action_check_for_updates){
+			
+			checkForUpdate();
+			
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -174,6 +181,7 @@ public class MainActivity extends Activity implements OnItemClickListener, OnIte
 	}
 	
 	private void checkForUpdate(){
-		
+		CheckForUpdateTask updateCheck = new CheckForUpdateTask(MainActivity.APP_VERSION, this);
+		updateCheck.execute(URL_TO_VERSION_FILE);
 	}
 }
